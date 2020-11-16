@@ -1,0 +1,108 @@
+---
+title: "User-Defined Type Guards in TypeScript"
+date: "2020-08-12T22:12:03.284Z"
+description: "Explain what user-defined type guards in TypeScript are and provide examples of commonly needed ones"
+image: "/type-guards.jpg"
+photographer: "Gary Bendig"
+photographerHref: "https://unsplash.com/@kris_ricepees?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+---
+
+The [TypeScript documentation](https://www.typescriptlang.org/docs/handbook/advanced-types.html#user-defined-type-guards) defines a Type Guard as
+
+> some expression that performs a runtime check that guarantees the type in some scope.
+
+In practical terms, I think of a type guard as a function that tells TypeScript it is safe to assign a certain type to a value based on whether that function returns true of false. Type guards can help in situations you would otherwise have to resort to a type cast. Type guards are similar to a cast in the sense that the programmer is asserting they know something TypeScript can't deduce on its own, but they are safer since they come with a runtime check that should validate that the type assignment is safe.
+
+## An Example
+
+Let's say we have two interfaces
+
+```typescript
+interface A {
+  a: string;
+  b: number;
+}
+
+interface C {
+  c: boolean;
+  d: string;
+}
+```
+
+and for some reason, we have a place in our code where the type of a value is unknown and we want to validate the data meets our expectation before passing the data along to the rest of our program. I find this situation often arises when I'm operating on data I don't have full control over, perhaps extracting data from a url or web storage, and I want to be really careful with it. Our goal is to verify that `value` below is of type A or type C and then pass it to the appropriate function.
+
+```typescript
+let value: unknown;
+
+function callWithA(a: A) {}
+function callWithC(c: C) {}
+
+// Goal
+if (isA(value)) {
+  callWithA(value);
+} else if (isC(value)) {
+  callWithC(value);
+}
+```
+
+`isA` and `isC` are the type guards that make this possible:
+
+```typescript
+function isA(value: unknown): value is A {
+  if (typeof value !== "object" || !value) {
+    return false;
+  }
+  return (
+    typeof (value as Record<string, unknown>).a === "string" &&
+    typeof (value as Record<string, unknown>).b === "number"
+  );
+}
+
+function isC(value: unknown): value is C {
+  if (typeof value !== "object" || !value) {
+    return false;
+  }
+  return (
+    typeof (value as Record<string, unknown>).c === "boolean" &&
+    typeof (value as Record<string, unknown>).d === "string"
+  );
+}
+```
+
+Notice the `value is A` and `value is C` as the return type annotation of these functions. This syntax is what tells TypeScript to assign the type to `value` in blocks where `isA`/`isC` return true.
+
+Another note, we are using a cast to `Record<string, unknown>` in these type guards because the `typeof value !== "object" || !value` refines `value` from `unknown` to `object`. `object` doesn't allow arbitrary property access, so the cast allows us to access fields a, b, c, and d. This cast isn't particularly unsafe, since we're just calling typeof on the property. I find it pretty typical to need to perform similar casts in type guards, since you are telling TypeScript something it otherwise could not figure out.
+
+## Filtering Arrays with Type Guards
+
+Another place type guards can oftentimes come in handy is as the argument to the array filter function. Taking our interfaces and type guards from the above example,
+
+```typescript
+const mixedArray: (A | C)[] = [];
+
+// A[]
+const arrayA = mixedArray.filter(isA);
+// C[]
+const arrayC = mixedArray.filter(isC);
+```
+
+One of the first places most people will probably encounter type guards is when trying to filter out `null`/`undefined` out of an array. Passing `Boolean` or `!!x` to the filter function is a very common pattern in JavaScript.
+
+```typescript
+let arr: (A | null)[];
+// (A | null)[]
+let filteredArr1 = arr.filter(Boolean);
+// (A | null)[]
+let filteredArr2 = arr.filter((x) => !!x);
+```
+
+Unfortunately, this [doesn't quite work](https://github.com/microsoft/TypeScript/issues/16655) in TypeScript, at least for now. The resulting array still is typed as having null values. Instead, a type guard can be used for this case.
+
+```typescript
+export function isPresent<T>(t: T | undefined | null | void): t is T {
+  return t !== undefined && t !== null;
+}
+
+// A[]
+let filteredArr3 = arr.filter(isPresent);
+```

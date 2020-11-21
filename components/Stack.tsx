@@ -23,7 +23,7 @@ interface UseStackItemStylesParams {
   space: string;
 }
 
-const useStackItemStyles = ({ align, space }: UseStackItemClassNameParams) => {
+const useStackItemStyles = ({ align, space }: UseStackItemStylesParams) => {
   return css`
     padding-top: ${space};
     ${align !== "left" &&

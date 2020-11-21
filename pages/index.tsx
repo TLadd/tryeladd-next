@@ -177,10 +177,19 @@ export default function BlogsList({ postData }: BlogsListProps) {
   );
 }
 
+interface PostFrontMatter {
+  title: string;
+  date: string;
+  description: string;
+  image: string;
+  photographer: string;
+  photographerHref: string;
+}
+
 interface PostItem {
   slug: string;
   content: string;
-  frontMatter: Record<string, any>;
+  frontMatter: PostFrontMatter;
 }
 
 export async function getStaticProps() {

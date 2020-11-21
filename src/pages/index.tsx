@@ -6,6 +6,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import AppHeader from "../components/AppHeader";
+import { PostFrontMatter } from "../types";
+import { NextSeo } from "next-seo";
 
 const root = process.cwd();
 
@@ -114,6 +116,10 @@ interface BlogsListProps {
 export default function BlogsList({ postData }: BlogsListProps) {
   return (
     <>
+      <NextSeo
+        description="React, TypeScript, GraphQL, and other tech blog posts"
+        title="Blog | Thomas Ladd"
+      />
       <AppHeader />
       <main
         css={css`
@@ -175,15 +181,6 @@ export default function BlogsList({ postData }: BlogsListProps) {
       </main>
     </>
   );
-}
-
-interface PostFrontMatter {
-  title: string;
-  date: string;
-  description: string;
-  image: string;
-  photographer: string;
-  photographerHref: string;
 }
 
 interface PostItem {

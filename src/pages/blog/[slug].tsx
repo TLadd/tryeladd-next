@@ -7,15 +7,38 @@ import path from "path";
 import mdxPrism from "mdx-prism";
 import AppHeader from "../../components/AppHeader";
 import ImageWithAttribution from "../../components/ImageWithAttribution";
-import Image from "next/image";
+import { NextSeo } from "next-seo";
+import { css } from "styled-components";
+import { PostFrontMatter } from "../../types";
+import { SITE_ORIGIN } from "../../constants";
 
 const root = process.cwd();
 
-export default function BlogPost({ mdxSource, frontMatter }) {
+interface BlogPostProps {
+  mdxSource: any;
+  frontMatter: PostFrontMatter;
+}
+
+export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
   const content = hydrate(mdxSource);
 
   return (
     <>
+      <NextSeo
+        description={frontMatter.description}
+        title={frontMatter.title}
+        openGraph={{
+          type: "article",
+          images: [
+            {
+              url: `${SITE_ORIGIN}${frontMatter.image}`,
+              width: 1000,
+              height: 625,
+              alt: frontMatter.imageAlt,
+            },
+          ],
+        }}
+      />
       <AppHeader />
       <main
         className="blog-page"

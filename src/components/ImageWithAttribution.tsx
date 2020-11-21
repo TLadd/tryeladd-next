@@ -6,8 +6,8 @@ interface ImageWithAttributionProps {
   className?: string;
   photographer: string;
   photographerHref: string;
-  source: string;
-  sourceHref: string;
+  source?: string;
+  sourceHref?: string;
   src: string;
 }
 

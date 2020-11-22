@@ -1,0 +1,85 @@
+---
+title: "Preact in the Shadow DOM"
+date: "2020-11-22T22:12:03.284Z"
+description: "Why and how to render Preact components into the shadow DOM"
+image: "/preact-shadow-dom.jpg"
+imageAlt: "Tables and Chairs in Shadows"
+photographer: "Jonny Clow"
+photographerHref: "https://unsplash.com/@jonnyclow?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
+---
+
+The [shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) is typically associated with [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components), but its style encapsulation properties can also be useful on its own. Up until recently, React's event system presented problems in the Shadow DOM, but those issues have been [resolved in React 17](https://github.com/facebook/react/issues/10422#issuecomment-674928774). So while this post focuses on Preact since its small size is a good fit for the cases that style encapsulation is also useful, the same process will also work with React.
+
+## Benefits of Shadow DOM
+
+The main reason to use the shadow DOM is for style encapsulation. CSS rules do not cross the shadow DOM in either direction, although inherited properties are still inherited as usual (for instance, font-family, color, etc).
+
+<iframe
+  src="https://codesandbox.io/embed/beautiful-hermann-r11ky?fontsize=14&hidenavigation=1&theme=dark"
+  style={{
+    width: "100%",
+    height: "500px",
+    border: 0,
+    borderRadius: "4px",
+    overflow: "hidden",
+  }}
+  title="beautiful-hermann-r11ky"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+The above example demonstrates the style encapsulating properites of the shadow DOM. The red box is int the normal light DOM and the purple box contents are in a shadow DOM. Even though there is a style rule in the `index.html` file to set the background-color of all buttons to red, it does not affect the button that is in the shadow DOM. Conversely, the style set in the shadow DOM to set the color of all `p` tags to purple and `font-weight` to bold does not affect the paragraph in the light DOM
+
+For most apps, this sort of encapsulation is not necessary. Assuming you are in full control of all app styles, you can ensure the styles do not interfere. Style encapsulation can be incredibly useful, however, if you are building something that gets embedded onto host pages that you do not control. For instance the [Grow.me](https://www.grow.me/), [OneSignal](https://onesignal.com/) or [Intercom](https://www.intercom.com/) widgets (note that not all of them use shadow DOM). In these cases, the style encapsulation behavior the shadow DOM provides is very useful.
+
+## Shadow DOM with Preact
+
+Rendering Preact or React into the shadow DOM is pretty simple. The target element that the initial Preact render call attaches to just needs to be within a shadow DOM.
+
+<iframe
+  src="https://codesandbox.io/embed/beautiful-hermann-r11ky?fontsize=14&hidenavigation=1&theme=dark"
+  style={{
+    width: "100%",
+    height: "500px",
+    border: 0,
+    borderRadius: "4px",
+    overflow: "hidden",
+  }}
+  title="beautiful-hermann-r11ky"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+></iframe>
+
+That's all there is to it.
+
+## Caveats
+
+For the most part, everything works normally. I have, however, come across a few cases that required extra consideration.
+
+#### styled-components
+
+By default, styled-components injects styles into the head node. When rendering components into the shadow DOM, this doesn't work since those styles can't cross the shadow DOM barrier. Luckily, styled-components provides a [StyleSheetManager component](https://styled-components.com/docs/api#stylesheetmanager) that allows customizing the target node that the styles are injected into. Setting the target to the root element inside the shadow DOM works.
+
+#### Global Click Listeners
+
+Click events still bubble out of the shadow DOM, but the events are [retargeted](https://polymer-library.polymer-project.org/2.0/docs/devguide/shadow-dom#event-retargeting) when observed outside of the originating shadow DOM. One case where this is particularly problematic is menu libaries that setup click listeners on `window` to determine if you click outside of the menu and automatically close it. The target ends up being the shadow DOM root when observed from the window event listener and that logic likely no longer functions properly.
+
+## Comparison to iframe
+
+For building apps that get embedded onto others' sites, iframes have long been the most common means of ensuring encapsulation. Typically a very thin script is loaded onto the page that is primarily responsible for initializing an iframe loads the app. One thing iframes get you that the shadow DOM does not is javascript encapsulation in addition to the style encapsulation. The hosting site could do any number of heinous to the global Javascript namespace and your app would continue to work fine unaffected.
+
+The cost of that full encapsulation is a lot of overhead when it comes to interacting with the host site or perhaps other iframes if your embedded app requires multiple widgets. The [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) is great for cross-frame communication, but not having to communicate across frames at all is a whole lot less hassle. If your application doesn't demand the guarantees Iframe's provide, I think using the shadow DOM is preferrable.
+
+## Final Note
+
+When I read Shadow DOM, it is always in the voice of a Yugioh villian.
+
+<iframe
+  style={{ display: "block", margin: "0 auto" }}
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/yFm5V__72yg"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>

@@ -5,7 +5,7 @@ import "prismjs/themes/prism-tomorrow.css";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Container>
+    <>
       <DefaultSeo
         openGraph={{
           locale: "en_US",
@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
         }}
       />
       <Component {...pageProps} />
-    </Container>
+    </>
   );
 }
 

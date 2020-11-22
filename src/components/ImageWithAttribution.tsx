@@ -28,7 +28,13 @@ function ImageWithAttribution({
       `}
       className={className}
     >
-      <Image width={1000} height={625} src={src} loading="eager" />
+      <Image
+        layout="intrinsic"
+        width={1000}
+        height={625}
+        src={src}
+        loading="eager"
+      />
       <span>
         Photo by{" "}
         <a href={photographerHref} target="_blank" rel="noopener noreferrer">

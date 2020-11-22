@@ -45,7 +45,7 @@ export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
         css={css`
           display: flex;
           justify-content: center;
-          padding: 2rem 4rem;
+          padding: 2rem;
         `}
       >
         <div
@@ -70,13 +70,6 @@ export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
             photographer={frontMatter.photographer}
             photographerHref={frontMatter.photographerHref}
           />
-          {/* <div
-            css={css`
-              text-align: center;
-            `}
-          >
-            <Image src={frontMatter.image} width={1000} height={625} />
-          </div> */}
           {content}
         </div>
       </main>

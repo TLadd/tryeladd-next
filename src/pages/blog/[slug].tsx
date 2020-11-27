@@ -6,7 +6,6 @@ import fs from "fs";
 import path from "path";
 import mdxPrism from "mdx-prism";
 import AppHeader from "../../components/AppHeader";
-import ImageWithAttribution from "../../components/ImageWithAttribution";
 import { NextSeo } from "next-seo";
 import { css } from "styled-components";
 import { PostFrontMatter } from "../../types";
@@ -62,14 +61,6 @@ export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
           >
             {frontMatter.title}
           </h1>
-          <ImageWithAttribution
-            css={css`
-              margin-bottom: 2rem;
-            `}
-            src={frontMatter.image}
-            photographer={frontMatter.photographer}
-            photographerHref={frontMatter.photographerHref}
-          />
           {content}
         </div>
       </main>

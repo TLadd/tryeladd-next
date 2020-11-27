@@ -15,21 +15,28 @@ The [shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Usi
 The main reason to use the shadow DOM is for style encapsulation. CSS rules do not cross the shadow DOM in either direction, although inherited properties are still inherited as usual (for instance, font-family, color, etc).
 
 <iframe
-  src="https://codesandbox.io/embed/beautiful-hermann-r11ky?codemirror=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2Findex.js&theme=dark"
-  style={{
-    width: "100%",
-    height: "500px",
-    border: 0,
-    borderRadius: "4px",
-    overflow: "hidden",
-  }}
+  height="425"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="Shadow DOM Example"
+  src="https://codepen.io/TLadd/embed/preview/PoGoQeV?height=425&theme-id=dark&default-tab=js,result"
+  frameBorder="no"
   loading="lazy"
-  title="beautiful-hermann-r11ky"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/>
+  allowTransparency="true"
+  allowFullScreen="true"
+>
+  See the Pen{" "}
+  <a href="https://codepen.io/TLadd/pen/PoGoQeV">Shadow DOM Example</a> by
+  Thomas Ladd (<a href="https://codepen.io/TLadd">@TLadd</a>) on{" "}
+  <a href="https://codepen.io">CodePen</a>.
+</iframe>
 
-The above example demonstrates the style encapsulating properites of the shadow DOM. The red box is in the normal light DOM and the purple box contents are in a shadow DOM. Even though there is a style rule in the `index.html` file to set the background-color of all buttons to red, it does not affect the button that is in the shadow DOM. Conversely, the style set in the shadow DOM to set the color of all `p` tags to purple and `font-weight` to bold does not affect the paragraph in the light DOM
+The above example demonstrates the style encapsulating properites of the shadow DOM.
+The red box is in the normal light DOM and the purple box contents are in a shadow
+DOM. Even though there is a style rule in the `index.html` file to set the background-color
+of all buttons to red, it does not affect the button that is in the shadow DOM. Conversely,
+the style set in the shadow DOM to set the color of all `p` tags to purple and `font-weight`
+to bold does not affect the paragraph in the light DOM
 
 For most apps, this sort of encapsulation is not necessary. Assuming you are in full control of all app styles, you can ensure the styles do not interfere. Style encapsulation can be incredibly useful, however, if you are building something that gets embedded onto host pages that you do not control. For instance the [Grow.me](https://www.grow.me/), [OneSignal](https://onesignal.com/) or [Intercom](https://www.intercom.com/) widgets (note that not all of them use shadow DOM). In these cases, the style encapsulation behavior the shadow DOM provides is very useful.
 
@@ -38,19 +45,20 @@ For most apps, this sort of encapsulation is not necessary. Assuming you are in 
 Rendering Preact or React into the shadow DOM is pretty simple. The target element that the initial Preact render call attaches to just needs to be within a shadow DOM.
 
 <iframe
-  src="https://codesandbox.io/embed/bold-framework-6msjq?codemirror=1&fontsize=14&hidenavigation=1&theme=dark"
-  style={{
-    width: "100%",
-    height: "500px",
-    border: 0,
-    borderRadius: "4px",
-    overflow: "hidden",
-  }}
+  height="450"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="xxExYJX"
+  src="https://codepen.io/TLadd/embed/preview/xxExYJX?height=450&theme-id=dark&default-tab=js,result"
+  frameBorder="no"
   loading="lazy"
-  title="bold-framework-6msjq"
-  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-/>
+  allowTransparency="true"
+  allowFullScreen="true"
+>
+  See the Pen <a href="https://codepen.io/TLadd/pen/xxExYJX">xxExYJX</a> by
+  Thomas Ladd (<a href="https://codepen.io/TLadd">@TLadd</a>) on{" "}
+  <a href="https://codepen.io">CodePen</a>.
+</iframe>
 
 That's all there is to it.
 

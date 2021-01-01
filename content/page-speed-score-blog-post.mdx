@@ -1,0 +1,30 @@
+---
+title: "Three Tips to Improve Page Speed Score"
+date: "2020-12-13T22:12:03.284Z"
+description: "The initial version of my last blog post had a lower-than-expected page speed score. This post detials the three steps I took to improve it."
+---
+
+My [last blog post](/preact-shadow-dom) initially had a lower than expected [page speed score](https://developers.google.com/speed/docs/insights/v5/about). After examining the page speed report, the big three sources of warnings that stood out were
+
+1. Codesandbox Embeds
+2. Header Image
+3. YouTube embed 
+
+I went about addressing each one of these and got the page speed score to a more respectable place.
+
+## Switch from Codesandbox to Codepen for Embedded Examples
+
+I wanted to include a couple of embedded runnable code examples in my last blog post, and I started out with [Codesandbox](https://codesandbox.io/). Codesandbox is typically my go-to tool for building a quick frontend prototype. It does an excellent job delivering a familiar development environment that is also easily shared. The Codesandbox embeds, however, are pretty heavy. It ends up loading an entire frontend development stack on page load. Setting the embed iframe to [lazy load](https://web.dev/iframe-lazy-loading/) could be helpful, but in my case one of the embeds is towards the top of the post, so it ends up needing to be loaded immediately anyways.
+
+After doing some research, I landed on replacing Codesandbox with [Codepen](https://codepen.io/) embeds. Specifically, I am using Codepen's [Click-to-Load Embeds](https://blog.codepen.io/2020/07/20/updates-to-the-click-to-load-embeds/) so that the embeds initially just show the code and a preview and then only pull in the javascript necessary to execute and display the result of that code once the embed has been clicked. It would be nice if Codesandbox created a similar mode for their embeds, but for now it seems like Codepen is the better option for this use case.
+
+## Remove Responsive Header Image
+
+I initially had an image at the top of every blog post. I was using Next.js's new Image component, and the page speed report was warning about it causing a large contentful paint. It turns out that this `Image` component's responsiveness is resulting in the warning because the page speed test is simulating a low-end device with a low-speed data connection but with a high-pixel density that ends up choosing a high quality image in the image `srcset`.
+
+Since the built-in Next.js `Image` component is still fairly new, I would expect this issue will eventually be addressed one way or another, but for the time being, it should not be used for images above the initial fold. In my case, I decided the image was mostly there for vanity reasons and wasn't providing much real value, so I decided to remove it entirely. 
+
+## Loading Youtube Embed on Click 
+
+Finally, I wanted to embed a YouTube video at the end of the post. It turns out YouTube videos are very heavy. I searched around and landed on [this trick](https://css-tricks.com/lazy-load-embedded-youtube-videos/) to instead just show the preview image for a YouTube video and then load the full embed and autoplay the video only after it is clicked. From the user's perspective, it isn't much different from having the full video player loaded, but it sure does have a big impact on the number of resources that need to be loaded initially. 
+

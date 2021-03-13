@@ -31,7 +31,7 @@ The main reason to use the shadow DOM is for style encapsulation. CSS rules do n
   <a href="https://codepen.io">CodePen</a>.
 </iframe>
 
-The above example demonstrates the style encapsulating properites of the shadow DOM.
+The above example demonstrates the style encapsulating properties of the shadow DOM.
 The red box is in the normal light DOM and the purple box contents are in a shadow
 DOM. Even though there is a style rule in the `index.html` file to set the background-color
 of all buttons to red, it does not affect the button that is in the shadow DOM. Conversely,
@@ -79,20 +79,3 @@ Click events still bubble out of the shadow DOM, but the events are [retargeted]
 For building apps that get embedded onto others' sites, iframes have long been the most common means of ensuring encapsulation. Typically a very thin script is loaded onto the page that is primarily responsible for initializing an iframe loads the app. One thing iframes get you that the shadow DOM does not is javascript encapsulation in addition to the style encapsulation. The hosting site could do any number of heinous to the global Javascript namespace and your app would continue to work fine unaffected.
 
 The cost of that full encapsulation is a lot of overhead when it comes to interacting with the host site or perhaps other iframes if your embedded app requires multiple widgets. The [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) is great for cross-frame communication, but not having to communicate across frames at all is a whole lot less hassle. If your application doesn't demand the guarantees Iframe's provide, I think using the shadow DOM is preferrable.
-
-## Final Note
-
-When I read Shadow DOM, it is always in the voice of a Yugioh villian.
-
-<iframe
-  style={{ display: "block", margin: "0 auto" }}
-  width="560"
-  height="315"
-  loading="lazy"
-  src="https://www.youtube.com/embed/yFm5V__72yg"
-  srcDoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/yFm5V__72yg?autoplay=1><img src=https://img.youtube.com/vi/yFm5V__72yg/hqdefault.jpg alt='Video swiggity swagger realm say hello to the shadow realm!'><span>▶</span></a>"
-  frameBorder="0"
-  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-  title="The Dark Knight Rises: What Went Wrong? – Wisecrack Edition"
-></iframe>

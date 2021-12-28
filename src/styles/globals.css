@@ -176,3 +176,9 @@ html {
 .blog-page blockquote p {
   display: inline;
 }
+
+code {
+  color: crimson;
+  font-size: 105%;
+  background-color: rgba(222, 222, 222, 0.3);
+}

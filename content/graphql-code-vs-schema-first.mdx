@@ -1,0 +1,122 @@
+---
+title: "GraphQL Code vs Schema First Development"
+date: "2021-02-27T22:12:03.284Z"
+description: "Comparison of using code-first and schema-first development for a GraphQL server in TypeScript"
+image: "/code-first-vs-schema-first.jpg"
+imageAlt: "Light and Water"
+photographer: "Joshua Sortino"
+photographerHref: "https://unsplash.com/@sortino"
+---
+
+Two main approaches exist for writing a GraphQL server: code-first and schema-first. This post will compare these two approaches and explain why I typically prefer the code-first approach.
+
+## Schema-first Approach
+
+With a schema-first approach, you start with the GraphQL SDL. For instance, you start in a `.graphql` file writing something like
+
+```GraphQL
+type Query {
+  hero(episode: Episode): Character
+}
+
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+
+type Character {
+  name: String!
+  appearsIn: [Episode!]!
+}
+```
+
+Once you've settled on the data types and operation definitions, you need to write resolvers to tell the GraphQL server how to resolve the data declared in the schema. In order to achieve type safety in accordance with the schema, you would typically use GraphQL Code Generator's [Typescript Resolvers plugin](https://graphql-code-generator.com/docs/plugins/typescript-resolvers). Finally, you can implement the logic necessary to resolve the data and use the generated types to annotate the resolvers ensuring type safety.
+
+## Code-first Approach
+
+[Nexus](https://github.com/graphql-nexus/nexus) is what would typically be used for a code-first approach in TypeScript. Rather than specifying the schema in a separate `.graphql` file first, the source of truth for data types and operations lives in `.ts` files right alongside the resolver implementation. The same schema from the schema-first approach in Nexus would be
+
+```ts
+import { objectType, inputObjectType } from "nexus";
+
+export const Episode = enumType({
+  name: "Episode",
+  members: ["NEWHOPE", "EMPIRE", "JEDI"],
+});
+
+export const Character = objectType({
+  name: "Character",
+  definition(t) {
+    t.nonNull.string("name");
+    t.field("appearsIn", { type: nonNull(list(nonNull(Episode))) });
+  },
+});
+
+export const heroQuery = queryField("hero", {
+  type: Character,
+  args: {
+    episode: arg({ type: nullable(Episode) }),
+  },
+  async resolve(root, args, ctx) {
+    ...
+  },
+});
+```
+
+Similar to the schema-first approach, you still start by declaring the data types and operations and then filling in how to resolve them. You still do end up with an SDL file that you can feed to a GraphQL server implementation like Apollo, but it is a build artifact and not the original source of truth.
+
+## Schema-first Advantages
+
+Nothing in the above examples is particularly compelling for the code-first approach. Indeed, the first time I looked at Nexus, I thought it was a step backwards to something like vanilla graphql-js compared to the approach popularized by Apollo where you get to write the nice SDL. I still think the biggest benefit of the schema-first approach is that writing and reading the SDL is easier than the Nexus API. `appearsIn: [Episode!]!` is a lot easier to parse than `t.field("appearsIn", { type: nonNull(list(nonNull(Episode))) })`. As I've used nexus more, however, this disparity has decreased.
+
+## Code-first Advantages
+
+The biggest advantage of a code-first approach is that it allows for more dynamic schema creation. GraphQL's type system doesn't include generics, so you oftentimes end up with a lot of similar types when following conventions. Relay-styled pagination is the most common example in my experience. So many `*Connection` and `*Edge` types that only differ by what the `node` type is and the queries all have the same `first/after/before/last` arguments.
+
+By moving our schema definition into the TypeScript realm instead of the GraphQL SDL realm, we gain the ability to use TypeScript to generate our schema. That means functions to abstract common patterns. Nexus actually includes a [connection plugin](https://nexusjs.org/docs/plugins/connection) that nicely implements relay-style pagination.
+
+Instead of having to write SDL like this over and over
+
+```GraphQL
+type CharacterConnection {
+  edges: [CharacterEdge!]!
+  pageInfo: PageInfo!
+}
+
+type CharacterEdge {
+  cursor: String!
+  node: Character!
+}
+
+type Query {
+  heros(
+    after: String
+    before: String
+    first: Int
+    last: Int
+  ): CharacterConnection!
+}
+```
+
+you get to write
+
+```ts
+export const herosQuery = queryField((t) => {
+  t.connectionField("heros", {
+    type: Character,
+    async nodes(root, args, ctx) {
+      // Return an array of Characters
+      return [];
+    },
+  });
+});
+```
+
+It is these types of common situations where the code-first approach really shines.
+
+The other advantages are a simplified dev/tooling setup and colocation of types/implementation. While your server runs, Nexus automatically regenerates TypeScript types based on what is defined. So if I add an argument and save the file, it is quickly available in the `resolve` arguments. This developer experience is similar to what you can get with GraphQL Code Generator in watch mode, but you don't need another tool to do it. Moreover, the colocation of the type definitions and the resolve implementation prevents having to jump back and forth between files.
+
+## Wrapping Up
+
+Both schema-first and code-first approaches are viable for developing a GraphQL server. My preference at this point is to use Nexus and a code-first approach.

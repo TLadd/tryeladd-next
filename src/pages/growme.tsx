@@ -50,9 +50,27 @@ function GrowMePage() {
               }`,
           }}
         />
-        <script
+        {/* <script
           src="https://faves.grow.me/main.js"
           data-grow-faves-site-id="1b4fb5b7-a87e-4638-833b-3dd63ae36afe"
+        /> */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `!(function () {
+            window.growMe ||
+              ((window.growMe = function (e) {
+                window.growMe._.push(e);
+              }),
+              (window.growMe._ = []));
+            var e = document.createElement("script");
+            (e.type = "text/javascript"),
+              (e.src = "https://faves-grow-me-staging.mediavine.dev/main.js"),
+              (e.defer = !0),
+              e.setAttribute("data-grow-faves-site-id", "U2l0ZTo3NWY2MzkyZC0xZTU0LTQ5YmItYWQ3YS02MmNlOGRmMzA2OWM=");
+            var t = document.getElementsByTagName("script")[0];
+            t.parentNode.insertBefore(e, t);
+          })();`,
+          }}
         />
       </Head>
       <header>

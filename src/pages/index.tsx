@@ -8,6 +8,7 @@ import matter from "gray-matter";
 import AppHeader from "../components/AppHeader";
 import { PostFrontMatter } from "../types";
 import { NextSeo } from "next-seo";
+import Head from "next/head";
 
 const root = process.cwd();
 
@@ -120,6 +121,14 @@ export default function BlogsList({ postData }: BlogsListProps) {
         description="React, TypeScript, GraphQL, and other tech blog posts"
         title="Blog | Thomas Ladd"
       />
+      <Head>
+        <script
+          data-grow-initializer
+          dangerouslySetInnerHTML={{
+            __html: `!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTpkMDk0ZWEzNy1mMTEwLTQzZmItYTBhYS1kOTdmMjgwNTE4MTQ=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();`,
+          }}
+        />
+      </Head>
       <AppHeader />
       <main
         css={css`

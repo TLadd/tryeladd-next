@@ -45,6 +45,7 @@ function BlogItem({
           height: 100%;
           object-fit: cover;
         `}
+        alt=" "
         src={imgUrl}
       />
       <div
@@ -61,16 +62,15 @@ function BlogItem({
       >
         <Stack space="0.5em">
           <h4>
-            <Link href="/blog/[slug]" as={`/blog/${slug}`}>
-              <a
-                css={css`
-                  color: currentColor;
-                  text-decoration: none;
-                  cursor: pointer;
-                `}
-              >
-                {title}
-              </a>
+            <Link
+              href={`/blog/${slug}`}
+              css={css`
+                color: currentColor;
+                text-decoration: none;
+                cursor: pointer;
+              `}
+            >
+              {title}
             </Link>
           </h4>
           <p

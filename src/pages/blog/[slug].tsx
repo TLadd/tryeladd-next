@@ -1,6 +1,6 @@
 import * as React from "react";
-import renderToString from "next-mdx-remote/render-to-string";
-import hydrate from "next-mdx-remote/hydrate";
+import { MDXRemote } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
 import matter from "gray-matter";
 import fs from "fs";
 import path from "path";
@@ -19,8 +19,6 @@ interface BlogPostProps {
 }
 
 export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
-  const content = hydrate(mdxSource);
-
   return (
     <>
       <NextSeo
@@ -61,7 +59,7 @@ export default function BlogPost({ mdxSource, frontMatter }: BlogPostProps) {
           >
             {frontMatter.title}
           </h1>
-          {content}
+          <MDXRemote {...mdxSource} />
         </div>
       </main>
     </>
@@ -81,7 +79,7 @@ export async function getStaticProps({ params }) {
     "utf8"
   );
   const { data, content } = matter(source);
-  const mdxSource = await renderToString(content, {
+  const mdxSource = await serialize(content, {
     mdxOptions: {
       rehypePlugins: [mdxPrism],
     },

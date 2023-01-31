@@ -26,31 +26,30 @@ function AppHeader() {
             font-size: 24px;
           `}
         >
-          <Link href="/">
-            <a
+          <Link
+            href="/"
+            css={css`
+              display: flex;
+              align-items: center;
+              font-size: 24px;
+              text-decoration: none;
+              cursor: pointer;
+            `}
+          >
+            <Image
+              src="/android-chrome-512x512.png"
+              alt="Logo"
+              width={50}
+              height={50}
+              loading="eager"
+            />{" "}
+            <span
               css={css`
-                display: flex;
-                align-items: center;
-                font-size: 24px;
-                text-decoration: none;
-                cursor: pointer;
+                margin-left: 12px;
               `}
             >
-              <Image
-                src="/android-chrome-512x512.png"
-                alt="Logo"
-                width={50}
-                height={50}
-                loading="eager"
-              />{" "}
-              <span
-                css={css`
-                  margin-left: 12px;
-                `}
-              >
-                Thomas Ladd
-              </span>
-            </a>
+              Thomas Ladd
+            </span>
           </Link>
         </li>
       </ul>

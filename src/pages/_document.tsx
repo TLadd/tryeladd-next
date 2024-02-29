@@ -58,6 +58,13 @@ class MyDocument extends Document {
               `,
             }}
           />
+          <script
+            type="text/javascript"
+            async={true}
+            data-noptimize="1"
+            data-cfasync="false"
+            src="//scripts.journeymv.com/tags/aa62e8f9-6398-4a73-b4aa-52e8d364eaff.js"
+          ></script>
         </Head>
         <body>
           <Main />

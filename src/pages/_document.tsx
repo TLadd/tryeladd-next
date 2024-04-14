@@ -63,7 +63,7 @@ class MyDocument extends Document {
             async={true}
             data-noptimize="1"
             data-cfasync="false"
-            src="//scripts.scriptwrapper.com/tags/aa62e8f9-6398-4a73-b4aa-52e8d364eaff.js"
+            src="//scripts.scriptwrapper.com/tags/d094ea37-f110-43fb-a0aa-d97f28051814.js"
           ></script>
         </Head>
         <body>
